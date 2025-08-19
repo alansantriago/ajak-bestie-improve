@@ -1,0 +1,200 @@
+/* --- PENGATURAN DASAR --- */
+.chart-viewport {
+    height: 75vh;
+    overflow: auto;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+.chart-container {
+    padding: 20px;
+}
+.org-chart {
+    text-align: center;
+    display: inline-block;
+}
+.org-chart ul, .org-chart li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+.org-chart > ul > li {
+    padding: 0;
+}
+
+/* --- LAYOUT & GARIS PENGHUBUNG (TELAH DIPERBAIKI) --- */
+.org-chart ul {
+    display: table;
+    padding-top: 25px;
+    margin: 0 auto;
+    /* DIHAPUS: border-spacing menciptakan celah yang tidak bisa diisi garis */
+    /* border-spacing: 15px 0; */
+}
+.org-chart > ul {
+    border-spacing: 0;
+}
+.org-chart li {
+    display: table-cell;
+    position: relative;
+    vertical-align: top;
+    /* DIUBAH: Gunakan padding untuk memberi jarak antar kartu, bukan border-spacing */
+    padding: 0 8px; 
+}
+
+/* Garis horizontal */
+.org-chart li::before, 
+.org-chart li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    width: 50%;
+    height: 25px;
+    border-top: 2px solid #cbd5e0;
+}
+.org-chart li::after {
+    left: 50%;
+    right: auto;
+    /* DIHAPUS: Garis vertikal ke atas sudah ditangani oleh .node-card::before */
+    /* border-left: 2px solid #cbd5e0; */
+}
+
+/* Garis vertikal dari kartu ke garis horizontal di atasnya */
+.node-card::before {
+    content: '';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 25px;
+    border-left: 2px solid #cbd5e0;
+}
+
+/* Aturan untuk ujung-ujung garis */
+.org-chart li:only-child::after, 
+.org-chart li:only-child::before {
+    display: none;
+}
+.org-chart li:first-child::before, .org-chart li:last-child::after { 
+    border: 0 none; 
+}
+.org-chart li:last-child::before { 
+    border-right: 2px solid #cbd5e0;
+    border-radius: 0 5px 0 0;
+}
+.org-chart li:first-child::after {
+    border-radius: 5px 0 0 0;
+}
+
+
+/* Hapus Garis untuk node paling atas (root) */
+.org-chart > ul > li::before,
+.org-chart > ul > li::after {
+    border-top: none !important;
+}
+.org-chart > ul > li > .node-card::before {
+    display: none !important;
+}
+
+
+/* --- GARIS TURUN DARI INDUK KE ANAK (TELAH DIPERBAIKI) --- */
+.node-card.has-children::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Mulai dari bawah kartu */
+    left: 50%;
+    transform: translateX(-50%);
+    /* DIUBAH: Samakan tingginya dengan padding-top ul agar pas */
+    height: 25px; 
+    border-left: 2px solid #cbd5e0;
+}
+
+
+/* --- DESAIN KARTU (UMUM) --- */
+.node-card {
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+    margin-top: 22px;
+    z-index: 1;
+}
+.node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #f7fafc;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.node-type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #2dce89;
+    text-transform: uppercase;
+}
+.node-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #32325d;
+    padding: 12px;
+}
+.node-details {
+    padding: 0 12px 12px 12px;
+    font-size: 0.85rem;
+    border-top: 1px solid #e9ecef;
+}
+.node-details div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0;
+}
+.detail-value {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* --- KARTU KHUSUS UNTUK TABEL NON-STRUKTURAL --- */
+.non-struktural-card {
+    min-width: 600px;
+    max-width: 800px;
+}
+.non-struktural-card .node-type {
+    color: #1171ef;
+}
+.non-struktural-table {
+    max-height: none;
+    overflow: visible;
+}
+.non-struktural-table .table {
+    font-size: 0.8rem;
+    margin: 0;
+    background-color: #fff;
+    table-layout: fixed;
+    width: 100%;
+}
+.non-struktural-table .table th,
+.non-struktural-table .table td {
+    padding: 8px 12px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+.non-struktural-table .table th:nth-child(1),
+.non-struktural-table .table td:nth-child(1) { width: 52%; }
+.non-struktural-table .table th:nth-child(2),
+.non-struktural-table .table td:nth-child(2) { width: 12%; }
+.non-struktural-table .table th:nth-child(3),
+.non-struktural-table .table td:nth-child(3) { width: 12%; }
+.non-struktural-table .table th:nth-child(4),
+.non-struktural-table .table td:nth-child(4) { width: 12%; }
+.non-struktural-table .table th:nth-child(5),
+.non-struktural-table .table td:nth-child(5) { width: 12%; }
+.non-struktural-table .table .text-left{
+    text-align: left !important;
+}
