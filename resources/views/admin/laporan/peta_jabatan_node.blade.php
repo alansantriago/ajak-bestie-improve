@@ -1,9 +1,6 @@
 <li>
     {{-- KUNCI PERUBAHAN: Tambahkan class 'has-children' jika ada anak --}}
     <div class="node-card {{ (count($data['tree']) > 0) ? 'has-children' : '' }}">
-        <div class="node-header">
-            <div class="node-type">{{ $data['jenis_jabatan'] ?? 'Struktural' }}</div>
-        </div>
         <div class="node-title">{{ $nama_jabatan }}</div>
         <div class="node-details">
             <div><span class="detail-value">Kelas {{ $data['kelas_jabatan'] ?? '-' }}</span></div>
@@ -35,18 +32,15 @@
             @if(count($non_struktural_children) > 0)
                 <li>
                     <div class="node-card non-struktural-card">
-                        <!-- <div class="node-header">
-                            <div class="node-type"></div>
-                        </div> -->
                         <div class="non-struktural-table">
                             <table class="table table-sm mb-0">
-                                <thead class="thead-light">
+                                <thead>
                                     <tr>
-                                        <th>Nama Jabatan</th>
-                                        <th class="text-center">KLS</th>
+                                        <th>JABATAN</th>
+                                        <th class="text-center">Kls</th>
                                         <th class="text-center">B</th>
                                         <th class="text-center">K</th>
-                                        <th class="text-center">S</th>
+                                        <th class="text-center">+/-</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -76,8 +70,19 @@
 
                                     @foreach ($grouped as $jenis => $rows)
                                         <tr>
-                                            <th colspan="5" class="text-left">{{ strtoupper($jenis) }}</th>
+                                            <th colspan="5" class="text-left1">{{ strtoupper($jenis) }}</th>
                                         </tr>
+
+                                        {{-- KUNCI PERUBAHAN: Blok PHP untuk sorting berdasarkan kelas_jabatan (KLS) --}}
+                                        @php
+                                            uasort($rows, function ($a, $b) {
+                                                // Gunakan null coalescing operator (??) untuk default ke 0 jika 'kelas_jabatan' tidak ada
+                                                // Ini membuat sorting lebih aman dan mencegah error.
+                                                // Urutkan dari tertinggi ke terendah (descending).
+                                                return ($b['kelas_jabatan'] ?? 0) <=> ($a['kelas_jabatan'] ?? 0);
+                                            });
+                                        @endphp
+
                                         @foreach ($rows as $child_name => $child_data)
                                             <tr>
                                                 <td class="text-left">{{ $child_name }}</td>

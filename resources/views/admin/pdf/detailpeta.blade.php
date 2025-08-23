@@ -1,44 +1,65 @@
-{{-- resources/views/admin/pdf/detailpeta.blade.php --}}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Peta Jabatan - {{ $namaopd }}</title>
     <style>
-        /* --- PENGATURAN DASAR --- */
-        body {
+        /* --- PENGATURAN DASAR & PRINT --- */
+        .printable-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            page-break-inside: avoid;
+        }
+
+        .chart-viewport {
+                width: 100%; /* <-- TAMBAHKAN ATAU PASTIKAN BARIS INI ADA */
+                overflow: visible;
+                page-break-inside: avoid;
+
+        @page {
+            size: A4 landscape; /* Mengatur halaman ke A4 landscape */
+            margin: 20px;
+        }
+
+        html, body {
             font-family: 'Helvetica', 'Arial', sans-serif;
             margin: 0;
-            padding: 20px;
-            font-size: 12px;
-            line-height: 1.4;
+            padding: 0; /* Dihapus padding agar konten bisa full-width */
+            font-size: 11px; /* Sedikit diperkecil untuk memuat lebih banyak konten */
+            line-height: 1.3;
+            width: 100%; /* Memastikan body mengisi area cetak */
         }
 
         h2 {
-            text-align: center;
+            width: max-content; /* Membuat lebar h2 pas dengan teksnya */
+            margin-left: auto;   /* Margin kiri otomatis */
+            margin-right: auto;  /* Margin kanan otomatis */
+
+            /* Properti lain tetap sama */
             margin-bottom: 1.5rem;
             color: #32325d;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             page-break-after: avoid;
         }
 
-        /* --- PENGATURAN DASAR --- */
+        /* --- CONTAINER UTAMA --- */
         .chart-viewport {
-            height: auto;
             overflow: visible;
-            border-radius: 8px;
             page-break-inside: avoid;
         }
         
         .chart-container {
-            padding: 15px;
+            padding: 0; /* Padding dihilangkan agar chart lebih lebar */
         }
         
         .org-chart {
             text-align: center;
             display: inline-block;
             page-break-inside: avoid;
+            width: 100%; /* Memastikan chart menggunakan lebar penuh */
         }
         
         .org-chart ul, .org-chart li {
@@ -52,10 +73,10 @@
             padding: 0;
         }
 
-        /* --- LAYOUT & GARIS PENGHUBUNG (TELAH DIPERBAIKI) --- */
+        /* --- LAYOUT & GARIS PENGHUBUNG --- */
         .org-chart ul {
             display: table;
-            padding-top: 25px;
+            padding-top: 24px;
             margin: 0 auto;
             page-break-inside: avoid;
         }
@@ -68,7 +89,7 @@
             display: table-cell;
             position: relative;
             vertical-align: top;
-            padding: 0 8px; 
+            padding: 0 5px; /* Padding dikurangi agar lebih rapat */
             page-break-inside: avoid;
         }
 
@@ -81,7 +102,7 @@
             right: 50%;
             width: 50%;
             height: 25px;
-            border-top: 2px solid #cbd5e0;
+            border-top: 1px solid #000;
         }
         
         .org-chart li::after {
@@ -97,7 +118,7 @@
             left: 50%;
             transform: translateX(-50%);
             height: 25px;
-            border-left: 2px solid #cbd5e0;
+            border-left: 1px solid #000;
         }
 
         /* Aturan untuk ujung-ujung garis */
@@ -111,7 +132,7 @@
         }
         
         .org-chart li:last-child::before { 
-            border-right: 2px solid #cbd5e0;
+            border-right: 1px solid #000;
             border-radius: 0 5px 0 0;
         }
         
@@ -129,29 +150,29 @@
             display: none !important;
         }
 
-        /* --- GARIS TURUN DARI INDUK KE ANAK (TELAH DIPERBAIKI) --- */
+        /* Garis turun dari induk ke anak */
         .node-card.has-children::after {
             content: '';
             position: absolute;
-            top: 100%; /* Mulai dari bawah kartu */
+            top: 100%;
             left: 50%;
             transform: translateX(-50%);
             height: 25px; 
-            border-left: 2px solid #cbd5e0;
+            border-left: 1px solid #000;
         }
 
-        /* --- DESAIN KARTU (UMUM) --- */
+        /* --- DESAIN KARTU (STRUKTURAL) --- */
         .node-card {
             display: inline-block;
             background-color: #fff;
-            border: 1px solid #e9ecef;
+            border: 1px solid #000;
             border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: none; /* Dihilangkan agar lebih simpel saat print */
             position: relative;
-            margin-top: 23px;
+            margin-top: 25px;
             z-index: 1;
-            min-width: 200px;
-            max-width: 280px;
+            min-width: 180px; /* Diperkecil agar lebih muat */
+            max-width: 250px;
             page-break-inside: avoid;
         }
         
@@ -161,7 +182,7 @@
             align-items: center;
             padding: 6px 10px;
             background-color: #f7fafc;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #000;
             border-top-left-radius: 6px;
             border-top-right-radius: 6px;
         }
@@ -176,16 +197,17 @@
         .node-title {
             font-size: 11px;
             font-weight: 600;
-            color: #32325d;
+            background-color: #414347;
+            color: #ffffff;
             padding: 8px 10px;
             word-wrap: break-word;
             line-height: 1.3;
         }
         
         .node-details {
-            padding: 0 10px 8px 10px;
+            padding: 0 8px;
             font-size: 10px;
-            border-top: 1px solid #e9ecef;
+            border-top: 2px solid #000;
         }
         
         .node-details div {
@@ -199,45 +221,64 @@
             color: #4a5568;
         }
 
-        /* --- KARTU KHUSUS UNTUK TABEL NON-STRUKTURAL --- */
+        /* --- MODIFIKASI UNTUK NON-STRUKTURAL --- */
+        /* Menghilangkan gaya 'card' dan hanya menyisakan tabelnya saja */
         .non-struktural-card {
-            min-width: 500px;
-            max-width: 700px;
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            width: 100%; /* Menggunakan lebar penuh dari container li */
+            min-width: initial; /* Reset min-width */
+            max-width: initial; /* Reset max-width */
+            padding: 0;
+            margin-top: 23px;
             page-break-inside: avoid;
         }
         
-        .non-struktural-card .node-type {
-            color: #1171ef;
+        /* Menghilangkan header khusus non-struktural */
+        .non-struktural-card .node-header {
+            display: none;
         }
-        
+
+        /* Mengatur agar tabel non-struktural tidak memiliki padding ekstra */
         .non-struktural-table {
             max-height: none;
             overflow: visible;
-            padding: 10px;
+            padding: 0;
         }
+
+        /* .non-struktural-card::before {
+            display: none;
+        } */
         
         .non-struktural-table .table {
             font-size: 9px;
             margin: 0;
             background-color: #fff;
-            table-layout: fixed;
             width: 100%;
+            border: 1px solid #000; 
+            /* Tambahkan border luar untuk tabel */
         }
         
         .non-struktural-table .table th,
         .non-struktural-table .table td {
-            padding: 6px 8px;
+            padding: 5px 6px;
             white-space: normal;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            border: 1px solid #dee2e6;
+            /* word-break: break-word; */
+            border: 1px solid #000;
+            text-align: center;
         }
         
+        .non-struktural-table .table .text-left1{
+            text-align: left !important;
+            background-color: #bfc0c1;
+        }
+
         .non-struktural-table .table .text-left{
             text-align: left !important;
         }
 
-        /* --- ELEMEN TABEL --- */
+        /* --- ELEMEN TABEL UMUM --- */
         .table {
             width: 100%;
             margin-bottom: 1rem;
@@ -253,43 +294,56 @@
         }
         
         .thead-light th { 
-            background-color: #f8f9fa; 
+            background-color: #414347; 
             font-weight: 600;
-            color: #495057;
+            color: #ffffff;
         }
         
-        .text-center { 
-            text-align: center; 
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+
+        /* --- PENGATURAN KHUSUS PRINT --- */
+        @media print {
+            body {
+                font-size: 10px; /* Ukuran font lebih kecil saat print */
+                -webkit-print-color-adjust: exact; /* Memaksa print warna background di Chrome */
+                print-color-adjust: exact; /* Standar */
+            }
+            .node-card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+            h2 {
+                font-size: 14pt;
+            }
+            .non-struktural-table .table {
+                font-size: 8px;
+            }
         }
-        
-        .text-right { 
-            text-align: right; 
-        }
-        
-        .text-left { 
-            text-align: left; 
-        }
+    }
     </style>
 </head>
 <body>
+    {{-- Bungkus baru untuk menjaga judul dan konten tetap bersama --}}
+    <div class="printable-container"> 
+        <h2>Peta Jabatan {{ $namaopd }}</h2>
 
-    <h2>Peta Jabatan {{ $namaopd }}</h2>
-
-    <div class="chart-viewport">
-        <div class="chart-container">
-            <div class="org-chart">
-                <ul>
-                    @foreach ($jabatan_hierarchy as $nama_jabatan => $data)
-                        @include('admin.laporan.peta_jabatan_node', [
-                            'nama_jabatan' => $nama_jabatan,
-                            'data' => $data,
-                            'level' => 0
-                        ])
-                    @endforeach
-                </ul>
+        <div class="chart-viewport">
+            <div class="chart-container">
+                <div class="org-chart">
+                    <ul>
+                        @foreach ($jabatan_hierarchy as $nama_jabatan => $data)
+                            @include('admin.laporan.peta_jabatan_node', [
+                                'nama_jabatan' => $nama_jabatan,
+                                'data' => $data,
+                                'level' => 0
+                            ])
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-
 </body>
 </html>
