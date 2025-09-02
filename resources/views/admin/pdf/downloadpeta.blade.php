@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Peta Jabatan - {{ $namaopd }}</title>
     <style>
         @if ($orientasi == 'potrait')
@@ -25,25 +25,19 @@
             padding: 0;
             font-size: 8px;
             line-height: 1.1; 
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
         }
         
         .printable-container {
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             page-break-inside: avoid;
         }
         
-        @if ($orientasi == 'potrait')
         .scaling-wrapper {
-            transform: scale(0.7); 
+            transform: scale(0.25); 
             transform-origin: top center;
-            width: 142%; 
+            width: 400%; 
+            margin-left: 0%;
         }
-        @endif
 
         h2 {
             text-align: center;
@@ -54,7 +48,10 @@
         }
         
         .chart-viewport { overflow: visible; width: 100%; }
-        .chart-container { padding: 0; }
+        .chart-container { 
+            padding: 0; 
+            text-align: center; 
+        }
         .org-chart { text-align: center; display: inline-block; }
         .org-chart ul, .org-chart li { list-style: none; margin: 0; padding: 0; position: relative; page-break-inside: avoid; }
         .org-chart ul { display: table; padding-top: 20px; margin: 0 auto; border-spacing: 0; }
@@ -68,8 +65,27 @@
         .org-chart li::before, 
         .org-chart li::after { content: ''; position: absolute; top: 0; right: 50%; width: 50%; height: 20px; border-top: 1px solid #000; }
         .org-chart li::after { left: 50%; right: auto; }
-        .node-card::before { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); height: 20px; border-left: 1px solid #000; }
-        .node-card.has-children::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); height: 20px; border-left: 1px solid #000; }
+
+        .node-card::before { 
+            content: ''; 
+            position: absolute; 
+            top: -20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            height: 20px; 
+            width: 1px;
+            background-color: #000;
+        }
+        .node-card.has-children::after { 
+            content: ''; 
+            position: absolute; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            height: 20px; 
+            width: 1px;
+            background-color: #000;
+        }
+
         .org-chart li:only-child::after, .org-chart li:only-child::before { display: none; }
         .org-chart li:first-child::before, .org-chart li:last-child::after { border: 0 none; }
         .org-chart li:last-child::before { border-right: 1px solid #000; }
@@ -83,10 +99,11 @@
         .node-title {
             font-size: 7px; font-weight: 600; background-color: #414347; color: #fff; padding: 2px;
             border-top-left-radius: 4px; border-top-right-radius: 4px; overflow-wrap: break-word; 
+            border-bottom: 1px solid #000;
         }
 
         .node-details {
-            font-size: 7px; padding: 0 2px 2px 2px; border-top: 1px solid #000;
+            font-size: 7px; padding: 0 2px 2px 2px;
         }
         .node-details div { display: flex; justify-content: center; align-items: center; padding: 2px 0; }
         
@@ -116,9 +133,7 @@
 </head>
 <body>
     <div class="printable-container">
-        @if ($orientasi == 'potrait')
         <div class="scaling-wrapper">
-        @endif
 
             <h2>Peta Jabatan {{ $namaopd }}</h2>
             <div class="chart-viewport">
@@ -137,9 +152,7 @@
                 </div>
             </div>
 
-        @if ($orientasi == 'potrait')
         </div>
-        @endif
     </div>
 </body>
 </html>

@@ -57,6 +57,7 @@ Route::group(['middleware' => ['role:bkd']], function () {
     Route::get('/bkd/peta-jabatan', [PetaJabatanController::class, 'index'])->name('bkd.petajabatan');
     Route::get('/bkd/detail_peta/{id}', [PetaJabatanController::class, 'detail'])->name('bkd.detailpetajabatan');
     Route::get('/bkd/cetak-peta/{id}', [PetaJabatanController::class, 'peta'])->name('bkd.cetakpetajabatan');
+    Route::get('/bkd/unduh-peta/{id}', [PetaJabatanController::class, 'unduhPetaPdf'])->name('bkd.peta.unduh'); // <-- TAMBAHKAN ROUTE INI
 });
 Route::group(['middleware' => ['role:pimpinan']], function () {
 
@@ -159,6 +160,7 @@ Route::group(['middleware' => ['auth', 'aktif', 'roleDisable']], function () {
     Route::get('/peta-jabatan', [PetaJabatanController::class, 'index']);
     Route::get('/detail_peta/{id}', [PetaJabatanController::class, 'detail']);
     Route::get('/cetak-peta/{id}', [PetaJabatanController::class, 'peta']);
+    Route::get('/unduh-peta/{id}', [PetaJabatanController::class, 'unduhPetaPdf'])->name('peta.unduh'); // <-- TAMBAHKAN ROUTE INI
 
     Route::get('/laporan-faktor-dinas/{dinas_id}', [LaporanOPDController::class, 'faktorJabatan'])->name('laporanfaktoropd');
     Route::get('/laporan-kompetensi-dinas/{dinas_id}', [LaporanOPDController::class, 'standarkompetensi'])->name('laporankompetensiopd');
@@ -167,3 +169,4 @@ Route::group(['middleware' => ['auth', 'aktif', 'roleDisable']], function () {
 
     Route::get('/buka-verifikasi/{kode_jabatan}/{kolom_verifikasi}', [VerifikasiController::class, 'BukaStatusVerifikasi'])->name('buka-verifikasi');
 });
+

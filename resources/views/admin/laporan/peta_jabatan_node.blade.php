@@ -1,5 +1,4 @@
 <li>
-    {{-- KUNCI PERUBAHAN: Tambahkan class 'has-children' jika ada anak --}}
     <div class="node-card {{ (count($data['tree']) > 0) ? 'has-children' : '' }}">
         <div class="node-title">{{ $nama_jabatan }}</div>
         <div class="node-details">
@@ -54,7 +53,6 @@
                                             $jenisToRows[$jenis][$nsName] = $nsData;
                                         }
 
-                                        // Urutkan jenis agar Fungsional muncul lebih dulu, lalu Pelaksana, sisanya menyusul
                                         $orderedJenis = ['Fungsional', 'Pelaksana'];
                                         $grouped = [];
                                         foreach ($orderedJenis as $j) {
@@ -73,12 +71,8 @@
                                             <th colspan="5" class="text-left1">{{ strtoupper($jenis) }}</th>
                                         </tr>
 
-                                        {{-- KUNCI PERUBAHAN: Blok PHP untuk sorting berdasarkan kelas_jabatan (KLS) --}}
                                         @php
                                             uasort($rows, function ($a, $b) {
-                                                // Gunakan null coalescing operator (??) untuk default ke 0 jika 'kelas_jabatan' tidak ada
-                                                // Ini membuat sorting lebih aman dan mencegah error.
-                                                // Urutkan dari tertinggi ke terendah (descending).
                                                 return ($b['kelas_jabatan'] ?? 0) <=> ($a['kelas_jabatan'] ?? 0);
                                             });
                                         @endphp
