@@ -47,6 +47,7 @@
 
         h2 {
             text-align: center;
+            padding-top: 50px;
             margin-bottom: 1rem;
             color: #32325d;
             font-size: 12px;
@@ -54,7 +55,7 @@
         }
         
         .chart-viewport { overflow: visible; width: 100%; }
-        .chart-container { padding: 0; }
+        .chart-container { padding: 0; text-align: center; }
         .org-chart { text-align: center; display: inline-block; }
         .org-chart ul, .org-chart li { list-style: none; margin: 0; padding: 0; position: relative; page-break-inside: avoid; }
         .org-chart ul { display: table; padding-top: 20px; margin: 0 auto; border-spacing: 0; }

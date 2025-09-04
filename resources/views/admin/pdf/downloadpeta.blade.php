@@ -33,14 +33,16 @@
         }
         
         .scaling-wrapper {
-            transform: scale(0.25); 
+            /* transform: scale(0.25);  */
+            transform: scale(0.6);
             transform-origin: top center;
-            width: 400%; 
+            width: 170%; 
             margin-left: 0%;
         }
 
         h2 {
             text-align: center;
+            padding-top: 100px;
             margin-bottom: 1rem;
             color: #32325d;
             font-size: 12px;
